@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERT Manager · SuperSting R8/IP (simulación)</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"><style>
+:root{--bg:#070b10;--s:#0e141c;--ln:#1d2a3a;--ln2:#162130;--t:#dbe5f0;--m:#8497ad;--f:#5d7087;--ac:#38c8f5;--ok:#34d399;--w:#fbbf24;--bad:#fb5b66;--sans:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--mono:"IBM Plex Mono",Consolas,"Courier New",monospace}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#2b3b52 transparent}
+html,body{margin:0;background:var(--bg);color:var(--t);font:13px/1.45 var(--sans);-webkit-font-smoothing:antialiased}
+.mono,#lcd,#tip,#pt,.kv b,.tile b,.ch em,.el,.lg{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}
+.rail{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px;padding:18px 12px;background:#0a1017;border-right:1px solid var(--ln)}
+.brand{display:flex;align-items:center;gap:12px;padding:2px 8px 22px}.brand svg{width:34px;height:34px;flex:none}
+.brand b{display:block;font-size:15px;font-weight:600}.brand small{display:block;color:var(--m);font-size:11px}
+.rail button{display:flex;align-items:center;gap:12px;width:100%;height:40px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--m);font:500 13.5px var(--sans);text-align:left}
+.rail button svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rail button:hover{background:#111b27;color:var(--t)}.rail button.on{background:#10283a;color:var(--ac)}
+.ver{margin-top:auto;padding:10px 12px 0;color:var(--f);font-size:11px;border-top:1px solid var(--ln2)}
+.main{display:grid;gap:14px;align-content:start;min-width:0;padding:16px 20px 28px}
+#bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px;padding:10px 18px;background:var(--s);border:1px solid var(--ln);border-radius:10px}
+.it{display:grid}.k{color:var(--f);font-size:11px}.it b{font-size:13.5px;font-weight:500}
+#cn{display:flex;align-items:center;gap:10px}#cn>div{display:grid}#cn b{font-size:14px;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 3px #fb5b6626}
+.dot.s1{background:var(--w);box-shadow:0 0 0 3px #fbbf2426;animation:bl 1s infinite}.dot.s2{background:var(--ok);box-shadow:0 0 0 3px #34d39926}
+@keyframes bl{50%{opacity:.35}}@media(prefers-reduced-motion:reduce){.dot{animation:none!important}}
+.rs{display:inline-flex;align-items:flex-end;gap:2px;height:14px}.rs i{width:4px;background:#2a3a4f;border-radius:1px}
+.rs i:nth-child(1){height:4px}.rs i:nth-child(2){height:7px}.rs i:nth-child(3){height:10px}.rs i:nth-child(4){height:14px}
+#cn.on .rs i{background:var(--ok)}#bar #bc{margin-left:auto}
+.ph h1{margin:0;font-size:22px;font-weight:600;letter-spacing:-.01em}.ph p{margin:3px 0 0;color:var(--m);max-width:72ch}
+.cmd{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;background:var(--s);border:1px solid var(--ln);border-radius:10px}
+.prog{flex:1;min-width:240px;display:flex;align-items:center;gap:14px}#pt{color:var(--m);font-size:12px;white-space:nowrap}
+button{height:36px;padding:0 16px;border-radius:7px;border:1px solid #2b3d54;background:#142030;color:var(--t);font:500 13px var(--sans);cursor:pointer;transition:border-color .15s,background .15s}
+button:hover:not(:disabled){border-color:var(--ac);background:#182739}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.go{background:#0f6b48;border-color:#1b9468;color:#eafff6;font-weight:600}button.go:hover:not(:disabled){background:#12805a;border-color:var(--ok)}
+button.stop{background:#5a1f29;border-color:#a3414d;color:#ffecee;font-weight:600}button.stop:hover:not(:disabled){background:#722733;border-color:var(--bad)}
+.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1}
+.pn{background:var(--s);border:1px solid var(--ln);border-radius:10px;padding:14px 16px}
+.pn h3{margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid var(--ln2);font-size:12.5px;font-weight:600}
+label{display:block;margin:12px 0 4px;color:var(--m);font-size:12px}
+select,input[type=number],input[type=text]{width:100%;height:36px;padding:0 10px;background:#0a1017;color:var(--t);border:1px solid var(--ln);border-radius:7px;font:13px var(--mono)}
+input[type=checkbox]{accent-color:var(--ac);margin-right:8px;vertical-align:-2px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tile{background:#0a1017;border:1px solid var(--ln2);border-radius:8px;padding:9px 11px}
+.tile span{display:block;color:var(--m);font-size:11.5px}.tile em{font-style:normal;color:var(--f);margin-left:5px}.tile b{display:block;margin-top:2px;font-size:21px;font-weight:500;line-height:1.2}
+.ch{display:grid;grid-template-columns:34px 1fr 66px;align-items:center;gap:8px;margin:7px 0;font-size:11.5px;color:var(--m)}.ch em{font-style:normal;text-align:right;color:var(--t)}
+.m,.bar{height:6px;background:#0a1017;border-radius:3px;overflow:hidden}.bar{margin:6px 0 10px}
+.m i,.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1e8fb4,var(--ac));transition:width .25s}
+progress{appearance:none;-webkit-appearance:none;flex:1;width:100%;height:6px;border:0;border-radius:3px;background:#0a1017;overflow:hidden}
+progress::-webkit-progress-bar{background:#0a1017}progress::-webkit-progress-value{background:linear-gradient(90deg,#1e8fb4,var(--ac))}progress::-moz-progress-bar{background:var(--ac)}
+canvas{display:block;width:100%;background:#0a1017;border-radius:8px}#ps{height:440px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.two canvas{height:150px}#qh,#qz{height:170px}
+.leg{height:10px;margin-top:12px;border-radius:5px;background:linear-gradient(90deg,hsl(240,75%,52%),hsl(180,75%,52%),hsl(120,75%,52%),hsl(60,75%,52%),hsl(0,75%,52%))}
+.lg{display:flex;justify-content:space-between;margin-top:4px;color:var(--m);font-size:11px}#tip{min-height:20px;margin-top:10px;color:var(--ac);font-size:12px}
+#lcd{margin:0;height:150px;overflow:hidden;white-space:pre;padding:10px 12px;background:#070b10;border:1px solid var(--ln2);border-radius:8px;color:#7f93a9;font-size:12px;line-height:1.6}#lcd::first-line{color:#a6ffcd}
+#map{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.el{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:5px;background:#142030;border:1px solid #213249;color:#6f849b;font-size:10.5px;cursor:pointer}
+.el.g{background:#0e3a2c;border-color:#1f7a59;color:#7ef0c0}.el.y{background:#3d3a12;border-color:#8a8222;color:#f0e36a}.el.o{background:#47300f;border-color:#a8691a;color:#ffc46b}.el.r{background:#4d1a21;border-color:#b53a47;color:#ff9aa4}
+.el.ta{outline:2px solid #fff;outline-offset:1px}.el.ra{outline:2px solid var(--ac);outline-offset:1px}.lgd{margin-top:12px;color:var(--m);font-size:12px;line-height:1.6}
+#strip{display:flex;gap:2px;height:20px}#strip i{flex:1;background:#142030;border-radius:2px}#strip i.a{background:#fff}#strip i.b{background:var(--ac)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--ln2)}.kv:last-child{border-bottom:0}.kv span{color:var(--m)}.kv b{font-weight:500;text-align:right}
+.kv b.r{color:var(--bad)}.kv b.o{color:var(--w)}.mt{margin:10px 0 0;color:var(--m);font-size:12px;line-height:1.55}
+.scr[hidden]{display:none}.col{display:grid;gap:14px;align-content:start}
+.g3{display:grid;grid-template-columns:280px minmax(0,1fr) 320px;gap:14px;align-items:start}
+.g2c{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+.cfg{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;align-items:start}
+@media(max-width:1180px){.g3,.g2c{grid-template-columns:1fr}}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.rail{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:8px}.brand,.ver{display:none}.rail button{width:auto;white-space:nowrap}}
+</style></head><body>
+<div class="shell">
+<nav class="rail"><div class="brand"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0f2a38"/><path d="M7 11h18M10 16h12M13 21h6" stroke="#38c8f5" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg><div><b>ERT Manager</b><small>SuperSting R8/IP</small></div></div><button data-k="live" class="on"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Medición</button><button data-k="cfg"><svg viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Configuración</button><button data-k="con"><svg viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M7 8h10v3a5 5 0 0 1-10 0zM12 16v5"/></svg>Contacto</button><button data-k="qa"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>Calidad</button><button data-k="dat"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Datos</button><button data-k="eq"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 10h4v4h-4zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>Equipo</button><div class="ver">Simulación · v2.0</div></nav>
+<div class="main">
+<header id="bar">
+ <div id="cn"><span class="dot s0" id="dot"></span><div><b id="cs">Desconectado</b><span class="k">Wi-Fi SuperSting-R8</span></div><span class="rs"><i></i><i></i><i></i><i></i></span></div>
+ <div class="it"><span class="k">Batería interna</span><b class="mono" id="bi">12.60 V</b></div>
+ <div class="it"><span class="k">Batería externa</span><b class="mono" id="be">12.40 V</b></div>
+ <div class="it"><span class="k">GPS</span><b class="mono">3D, 9 sat</b></div>
+ <div class="it"><span class="k">Archivo</span><b class="mono" id="jf">LINEA01.stg</b></div>
+ <div class="it"><span class="k">Hora</span><b class="mono" id="clk">--:--:--</b></div>
+ <button id="bc" class="go">Conectar</button>
+</header>
+<div class="ph"><h1 id="pt1">Medición en vivo</h1><p id="pt2">Pseudosección de resistividad aparente, lecturas del transmisor y los 8 canales de recepción.</p></div>
+<div class="cmd"><button id="bt" class="need">F1 Contacto</button><button id="bs" class="need go">MEA Iniciar</button><button id="bx" class="need stop">Detener</button><div class="prog"><progress id="pg" max="100" value="0"></progress><span id="pt">Punto 0 / 0</span></div></div>
+
+<section class="scr" id="s-live"><div class="g3">
+ <div class="col">
+  <div class="pn"><h3>Lectura en vivo</h3><div class="tiles">
+   <div class="tile"><span>ρa<em>Ω·m</em></span><b id="v0">---</b></div><div class="tile"><span>ΔV/I<em>Ω</em></span><b id="v1">---</b></div>
+   <div class="tile"><span>Corriente<em>mA</em></span><b id="v2">---</b></div><div class="tile"><span>Tensión<em>mV</em></span><b id="v3">---</b></div>
+   <div class="tile"><span>Error<em>%</em></span><b id="v4">---</b></div><div class="tile"><span>Ciclos</span><b id="v5">---</b></div></div></div>
+  <div class="pn"><h3>Transmisor 200 W</h3>
+   <div class="ch"><span>I</span><div class="m"><i id="mi"></i></div><em id="ti">—</em></div>
+   <div class="ch"><span>V</span><div class="m"><i id="mv"></i></div><em id="tv">—</em></div></div>
+  <div class="pn"><h3>Canales de recepción (mV)</h3><div id="chs"></div></div>
+ </div>
+ <div class="col">
+  <div class="pn"><h3>Pseudosección de resistividad aparente en tiempo real</h3><canvas id="ps"></canvas><div class="leg"></div>
+   <div class="lg"><span>10</span><span>32</span><span>100</span><span>316</span><span>1000 Ωm</span></div><div id="tip">Pasa el cursor por un punto para ver sus datos</div></div>
+  <div class="pn"><h3>Registro del instrumento</h3><pre id="lcd"></pre></div>
+ </div>
+ <div class="col">
+  <div class="pn"><h3>Cruce TX/RX y curva IP</h3><div class="two"><canvas id="cx"></canvas><canvas id="ic"></canvas></div></div>
+  <div class="pn"><h3>Electrodos activos</h3><div id="strip"></div><div class="lgd">Blanco: transmisión (A, B). Cian: recepción (M, N).</div></div>
+ </div>
+</div></section>
+
+<section class="scr cfg" id="s-cfg" hidden>
+ <div class="pn"><h3>Geometría del tendido</h3>
+  <label for="jb">Nombre del archivo</label><input type="text" id="jb" value="LINEA01">
+  <label for="arr">Arreglo electródico</label><select id="arr"><option value="dd">Dipolo-dipolo</option><option value="pd">Polo-dipolo</option><option value="we">Wenner</option><option value="sc">Schlumberger</option></select>
+  <label for="ne">Electrodos (SwitchBox)</label><select id="ne"><option>28</option><option selected>56</option><option>84</option></select>
+  <label for="sp">Espaciado (m)</label><input type="number" id="sp" value="5" min="0.5" step="0.5">
+  <label for="nm">n máx</label><select id="nm"><option>4</option><option>6</option><option selected>8</option></select></div>
+ <div class="pn"><h3>Transmisión y medida</h3>
+  <label for="im">Corriente máx (mA)</label><input type="number" id="im" value="500" min="1" max="2000">
+  <label for="tt">Tiempo de medida (s)</label><select id="tt"><option>0.4</option><option>0.8</option><option selected>1.2</option><option>3.6</option><option>7.2</option><option>14.4</option></select>
+  <label><input type="checkbox" id="ip"> Modo IP (6 ventanas)</label>
+  <label for="ipt">Ciclo IP (s)</label><select id="ipt"><option>0.5</option><option>1</option><option selected>2</option><option>4</option><option>8</option></select>
+  <p class="mt">IP en el dominio del tiempo: ON+, OFF, ON−, OFF. La compensación de SP es automática.</p></div>
+ <div class="pn"><h3>Apilado y calidad</h3>
+  <label for="cy">Ciclos de apilado (máx. 300)</label><input type="number" id="cy" value="4" min="1" max="300">
+  <label for="er">Umbral de error (%)</label><input type="number" id="er" value="2" min="0.1" step="0.1">
+  <p class="mt">El equipo detiene el apilado cuando el promedio móvil queda bajo el umbral o se llega al máximo de ciclos.</p></div>
+ <div class="pn"><h3>Resumen de la secuencia</h3><div id="sum"></div></div>
+</section>
+
+<section class="scr" id="s-con" hidden><div class="g2c">
+ <div class="pn"><h3>Mapa de electrodos</h3><div id="map"></div><div class="lgd">Resistencia de contacto: verde menos de 2 kΩ, amarillo 2 a 5, naranja 5 a 10, rojo más de 10. Contorno blanco: transmisión (A, B). Contorno cian: recepción (M, N).</div></div>
+ <div class="col"><div class="pn"><h3>Resumen del test</h3><div id="cst"></div></div><div class="pn"><h3>Electrodos a revisar</h3><div id="cbad"></div></div></div>
+</div></section>
+
+<section class="scr" id="s-qa" hidden><div class="g2c">
+ <div class="col"><div class="pn"><h3>Distribución del error (%)</h3><canvas id="qh"></canvas></div><div class="pn"><h3>Error frente a resistividad aparente</h3><canvas id="qz"></canvas></div></div>
+ <div class="col"><div class="pn"><h3>Resumen de calidad</h3><div id="qk"></div></div><div class="pn"><h3>Puntos con mayor error</h3><div id="qt"></div><div class="row"><button id="rm" class="need">Remedir puntos sobre el umbral</button></div></div></div>
+</div></section>
+
+<section class="scr cfg" id="s-dat" hidden>
+ <div class="pn"><h3>Memoria interna</h3><div class="bar"><i id="dm"></i></div><div id="dmt" class="mt"></div><div id="dfl"></div></div>
+ <div class="pn"><h3>Exportar datos</h3><p class="mt">Para procesar en un software de inversión.</p><div class="row"><button id="x1">Descargar CSV</button><button id="x2">Descargar .z2d</button></div>
+  <p class="mt">El .z2d sigue el formato de tus ejemplos: columnas c1 p1 c2 p2 res (resistencia ΔV/I en Ω), notación científica y saltos de línea CRLF.</p></div>
+</section>
+
+<section class="scr cfg" id="s-eq" hidden>
+ <div class="pn"><h3>Estado del equipo</h3><div id="eqd"></div></div>
+ <div class="pn"><h3>Pruebas y SP</h3><div class="row"><button id="rt" class="need">Receiver test</button><button id="it" class="need">IP test load</button></div><div class="row"><button id="spb" class="need">Medir SP (8 canales)</button></div><div id="tres" class="lgd"></div></div>
+ <div class="pn"><h3>Especificaciones del SuperSting Wi-Fi</h3><div id="spec"></div><p class="mt">Fuente: ficha técnica de AGI. Esta app es una simulación.</p></div>
+</section>
+</div></div>
+<script>
+const $=id=>document.getElementById(id),R=Math.random,dpr=devicePixelRatio||1;
+const gauss=()=>Math.sqrt(-2*Math.log(1-R()))*Math.cos(6.2832*R());
+const col=r=>`hsl(${240*(1-Math.min(1,Math.max(0,(Math.log10(r)-1)/2)))},75%,52%)`;
+const hh=()=>new Date().toLocaleTimeString('es-ES');
+const iv=()=>300+($('ip').checked?+$('ipt').value:+$('tt').value)*150;
+const L=()=>(+$('ne').value-1)*(+$('sp').value||5);
+const st={c:0,run:0,pts:[],i:0,cr:null,bat:12.6,tm:null,g:null,last:[],act:[[],[]],zmax:0,lv:8};
+const chs=$('chs');
+chs.innerHTML=[...Array(8)].map((_,j)=>`<div class="ch"><span>CH${j+1}</span><div class="m"><i></i></div><em>—</em></div>`).join('');
+
+function log(m){const l=$('lcd');l.textContent=`[${hh()}] ${m}\n`+l.textContent.split('\n').slice(0,7).join('\n')}
+function setCh(g){[...chs.children].forEach((r,j)=>{const q=g[j];r.querySelector('i').style.width=q?Math.min(100,Math.max(2,(Math.log10(Math.max(q.V,.01))+2)/5*100))+'%':'0';r.querySelector('em').textContent=q?q.V.toPrecision(3):'—'})}
+function setC(){const c=st.c;$('cs').textContent=['Desconectado','Conectando…','Conectado'][c];$('dot').className='dot s'+c;$('cn').className=c==2?'on':'';$('bc').textContent=c==2?'Desconectar':'Conectar';document.querySelectorAll('.need').forEach(e=>e.disabled=c!=2);if(c==0)stop(0)}
+
+function buildMap(){const n=+$('ne').value,m=$('map');m.innerHTML='';for(let i=0;i<n;i++){const d=document.createElement('div');d.className='el';d.textContent=i+1;d.onclick=()=>log(`E${i+1}: `+(st.cr?st.cr[i].toFixed(2)+' kΩ':'sin test de contacto'));m.appendChild(d)}st.cr=null;paintMap()}
+function paintMap(){typeof ext=='function'&&ext();[...$('map').children].forEach((d,i)=>{const v=st.cr&&st.cr[i];d.className='el'+(v==null?'':v<2?' g':v<5?' y':v<10?' o':' r')+(st.act[0].includes(i)?' ta':st.act[1].includes(i)?' ra':'');d.title='E'+(i+1)+(v==null?'':' · '+v.toFixed(2)+' kΩ')})}
+
+function seq(){const N=+$('ne').value,a=$('arr').value,nm=+$('nm').value,sp=+$('sp').value||5,P=[];
+ if(a=='dd')for(let i=0;i<N;i++)for(let n=1;n<=nm;n++)i+2+n<N&&P.push([i,i+1,i+1+n,i+2+n]);
+ else if(a=='pd')for(let i=0;i<N;i++)for(let n=1;n<=nm;n++)i+n+1<N&&P.push([i,-1,i+n,i+n+1]);
+ else if(a=='we')for(let s=1;s<=nm;s++)for(let i=0;i+3*s<N;i++)P.push([i,i+3*s,i+s,i+2*s]);
+ else for(let s=1;s<=nm;s++)for(let i=0;i+2*s+1<N;i++)P.push([i,i+2*s+1,i+s,i+s+1]);
+ return P.map(p=>{const[A,B,M,Nn]=p,t=B<0?A:(A+B)/2,r=(M+Nn)/2,d=(u,v)=>Math.abs(u-v)*sp;
+  let s=1/d(A,M)-1/d(A,Nn);if(B>=0)s+=1/d(B,Nn)-1/d(B,M);
+  return{p,t,r,x:(t+r)/2*sp,z:.35*Math.abs(r-t)*sp,k:6.2832/Math.abs(s)}})}
+
+function rho(x,z){const l=L(),g=(a,b,w,h)=>Math.exp(-(((x-a)/w)**2+((z-b)/h)**2));
+ return Math.exp(Math.log(90)+.3*Math.min(z/(l*.08),1.5)+1.7*g(.68*l,.1*l,.12*l,.07*l)-1.9*g(.3*l,.07*l,.1*l,.05*l))}
+function meas(q){const im=+$('im').value||500,cy=+$('cy').value||4,[A,B]=q.p,
+ rc=((st.cr?st.cr[A]:1.3)+(B>=0&&st.cr?st.cr[B]:B>=0?1.3:.5))*(.9+.2*R());
+ q.rho=rho(q.x,q.z)*Math.exp(.03*gauss());q.I=Math.min(im,400/rc)*(.92+.08*R());
+ q.R=q.rho/q.k;q.V=q.R*q.I;q.vt=2*q.I*rc;q.err=Math.min(60,(.5+6/(1+q.V))*(.6+.8*R())/Math.sqrt(cy));
+ q.m=$('ip').checked?[0,1,2,3,4,5].map(j=>(6+30*R())*Math.exp(-.35*j)):null}
+
+function shot(){if(st.i>=st.pts.length)return stop(1);
+ const g=st.pts.slice(st.i,st.i+8);g.forEach(meas);st.i+=g.length;st.last=g;
+ const q=g[0],[A,B,M,N]=q.p;st.act=[[A,B].filter(v=>v>=0),g.flatMap(u=>[u.p[2],u.p[3]])];
+ $('v0').textContent=q.rho.toPrecision(4);$('v1').textContent=q.R.toPrecision(4);$('v2').textContent=q.I.toFixed(0);$('v3').textContent=q.V.toPrecision(4);
+ $('v4').textContent=q.err.toFixed(1);$('v4').style.color=q.err>(+$('er').value||2)?'#fbbf24':'';$('v5').textContent=$('cy').value;
+ $('mi').style.width=Math.min(100,q.I/(+$('im').value||500)*100)+'%';$('mv').style.width=Math.min(100,q.vt/8)+'%';
+ $('ti').textContent=q.I.toFixed(0)+' mA';$('tv').textContent=q.vt.toFixed(0)+' Vp-p';
+ setCh(g);st.bat-=.005;$('bi').textContent=st.bat.toFixed(2)+' V';$('be').textContent=(st.bat-.2).toFixed(2)+' V';
+ $('pg').value=st.i/st.pts.length*100;$('pt').textContent=`Punto ${st.i} / ${st.pts.length} · quedan ~${Math.ceil((st.pts.length-st.i)/8*iv()/1000)} s`;
+ log(`MEA ${st.i}/${st.pts.length} A${A+1} B${B<0?'∞':B+1} M${M+1} N${N+1} ρa=${q.rho.toPrecision(4)} Ωm I=${q.I.toFixed(0)} mA err=${q.err.toFixed(1)}%`);
+ paintMap();drawAll()}
+
+function stop(done){clearInterval(st.tm);st.run=0;$('bs').textContent='MEA Iniciar';
+ if(done){log(`Survey completo: ${st.pts.length} puntos guardados en LINEA01.stg`);st.act=[[],[]];paintMap();drawAll();return}
+ if(st.pts.length)log('Survey detenido');
+ st.pts=[];st.i=0;st.last=[];st.act=[[],[]];$('pg').value=0;$('pt').textContent='Punto 0 / 0';setCh([]);paintMap();drawAll()}
+
+function cv(id){const c=$(id),w=c.clientWidth,h=c.clientHeight;if(c.width!=w*dpr||c.height!=h*dpr){c.width=w*dpr;c.height=h*dpr}const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return[x,w,h]}
+function draw(){const[x,w,h]=cv('ps'),n=+$('ne').value,l=L(),mg={l:54,r:14,t:14,b:44},pw=w-mg.l-mg.r,ph=h-mg.t-mg.b,zm=st.zmax||l*.15;
+ const px=v=>mg.l+v/l*pw,py=v=>mg.t+(v/zm)*ph*.88+ph*.06;
+ x.fillStyle='#0b1118';x.fillRect(mg.l,mg.t,pw,ph);x.lineWidth=1;x.strokeStyle='#162130';x.fillStyle='#8497ad';x.font='11px "IBM Plex Mono",Consolas,monospace';x.textAlign='center';
+ for(let i=0;i<=6;i++){const v=l*i/6,X=Math.round(px(v))+.5;x.beginPath();x.moveTo(X,mg.t);x.lineTo(X,mg.t+ph);x.stroke();x.fillText(v.toFixed(0),X,mg.t+ph+16)}
+ x.textAlign='right';for(let i=0;i<=4;i++){const v=zm*i/4,Y=Math.round(py(v))+.5;x.beginPath();x.moveTo(mg.l,Y);x.lineTo(mg.l+pw,Y);x.stroke();x.fillText(v.toFixed(0),mg.l-8,Y+4)}
+ x.textAlign='center';x.fillText('Distancia (m)',mg.l+pw/2,h-6);x.save();x.translate(12,mg.t+ph/2);x.rotate(-Math.PI/2);x.fillText('Pseudoprofundidad (m)',0,0);x.restore();
+ const cw=pw/(n-1)*1.05,ch=ph*.88/Math.max(1,st.lv||8);
+ st.pts.slice(0,st.i).forEach(q=>{x.fillStyle=col(q.rho);x.fillRect(px(q.x)-cw/2+.5,py(q.z)-ch/2+.5,cw-1,ch-1)});
+ if(st.i<st.pts.length){x.strokeStyle='#fff';x.lineWidth=1.5;st.last.forEach(q=>x.strokeRect(px(q.x)-cw/2,py(q.z)-ch/2,cw,ch))}
+ if(!st.pts.length){x.fillStyle='#8497ad';x.font='13px "IBM Plex Sans",system-ui,sans-serif';x.fillText('Sin datos. Conecta el equipo y pulsa MEA Iniciar.',mg.l+pw/2,mg.t+ph/2)}
+ x.lineWidth=1;x.strokeStyle='#2b3b52';x.strokeRect(mg.l+.5,mg.t+.5,pw-1,ph-1);x.textAlign='left';
+ st.g={px,py,cw,ch}}
+function dx(){const[x,w,h]=cv('cx'),n=+$('ne').value;x.strokeStyle='#2b3b52';x.beginPath();x.moveTo(8,h-8);x.lineTo(w-8,8);x.stroke();
+ st.pts.slice(0,st.i).forEach(q=>{x.fillStyle=col(q.rho);x.fillRect(8+q.t/n*(w-16)-1.5,h-8-q.r/n*(h-16)-1.5,3,3)});
+ x.fillStyle='#7f93a9';x.font='10px system-ui';x.fillText('TX (posición)',w-72,h-12);x.fillText('RX',10,16)}
+function dip(){const[x,w,h]=cv('ic'),q=st.last[0];x.fillStyle='#7f93a9';x.font='10px system-ui';
+ if(!q||!q.m){x.fillText(q?'IP desactivado':'Curva IP, ventanas M1 a M6',8,16);return}
+ x.fillText('Curva IP (mV/V)',8,14);x.strokeStyle='#38c8f5';x.beginPath();
+ q.m.forEach((v,j)=>{const a=12+j/5*(w-24),b=h-10-v/40*(h-34);j?x.lineTo(a,b):x.moveTo(a,b)});x.stroke();
+ x.fillStyle='#38c8f5';q.m.forEach((v,j)=>x.fillRect(12+j/5*(w-24)-2,h-10-v/40*(h-34)-2,4,4))}
+const drawAll=()=>{draw();dx();dip();typeof ext=='function'&&ext()};
+
+$('ps').onmousemove=e=>{const g=st.g,r=e.target.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(!g)return;
+ const q=st.pts.slice(0,st.i).find(q=>Math.abs(g.px(q.x)-mx)<g.cw/2&&Math.abs(g.py(q.z)-my)<g.ch/2);
+ $('tip').textContent=q?`A${q.p[0]+1} B${q.p[1]<0?'∞':q.p[1]+1} M${q.p[2]+1} N${q.p[3]+1} · ρa ${q.rho.toPrecision(4)} Ωm · ΔV/I ${q.R.toPrecision(4)} Ω · I ${q.I.toFixed(0)} mA · err ${q.err.toFixed(1)}%`:'Pasa el cursor por un punto para ver sus datos'};
+
+$('bc').onclick=()=>{if(st.c==1)return;if(st.c==2){st.c=0;setC();log('Enlace Wi-Fi cerrado');return}
+ st.c=1;setC();log('Buscando red SuperSting-R8…');setTimeout(()=>{st.c=2;setC();log('Conectado: 8 canales, TX 200 W, FW 4.2')},1400)};
+$('bt').onclick=()=>{const n=+$('ne').value;st.cr=[...Array(n)].map(()=>Math.exp(Math.log(1.3)+.4*gauss()));st.cr[Math.floor(n*.31)]=7.4;st.cr[Math.floor(n*.72)]=24;paintMap();
+ log(`Test de contacto: ${n} electrodos, mediana ${[...st.cr].sort((a,b)=>a-b)[n>>1].toFixed(1)} kΩ, 2 con valor alto`)};
+$('bs').onclick=()=>{if(st.run){st.run=0;clearInterval(st.tm);$('bs').textContent='MEA Reanudar';log('Survey en pausa');return}
+ if(st.i>=st.pts.length){st.pts=seq();st.i=0;if(!st.pts.length){log('La configuración no genera puntos');return}
+  const zs=st.pts.map(q=>q.z);st.zmax=Math.max(...zs);st.lv=new Set(zs.map(z=>z.toFixed(3))).size;
+  log(`Secuencia ${$('arr').selectedOptions[0].text}: ${st.pts.length} puntos, ${$('ne').value} electrodos`)}
+ st.run=1;$('bs').textContent='Pausar';st.tm=setInterval(shot,iv())};
+$('bx').onclick=()=>stop(0);
+['arr','ne','sp','nm'].forEach(id=>$(id).onchange=()=>{stop(0);if(id=='ne')buildMap()});
+
+buildMap();setC();drawAll();
+setInterval(()=>$('clk').textContent=hh(),1000);addEventListener('resize',drawAll);
+log('Listo. Pulsa Conectar para enlazar con el equipo.');
+</script>
+<script>
+const kv=a=>a.map(([k,v])=>`<div class="kv"><span>${k}</span><b class="mono">${v}</b></div>`).join(''),vis=k=>!$('s-'+k).hidden;
+const TT={'live': ('Medición en vivo', 'Pseudosección de resistividad aparente, lecturas del transmisor y los 8 canales de recepción.'), 'cfg': ('Configuración del survey', 'Geometría del tendido, parámetros de transmisión y criterios de apilado.'), 'con': ('Contacto de electrodos', 'Resistencia de contacto de cada electrodo del SwitchBox antes de medir.'), 'qa': ('Control de calidad', 'Distribución del error y puntos que superan el umbral configurado.'), 'dat': ('Datos y exportación', 'Memoria del instrumento y archivos para el software de inversión.'), 'eq': ('Equipo y diagnóstico', 'Estado del SuperSting, pruebas de receptor e IP, y medición de SP.')};
+document.querySelectorAll('.rail button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!='s-'+b.dataset.k);document.querySelectorAll('.rail button').forEach(x=>x.classList.toggle('on',x==b));$('pt1').textContent=TT[b.dataset.k][0];$('pt2').textContent=TT[b.dataset.k][1];scrollTo(0,0);drawAll()});
+$('spec').innerHTML=kv([['Corriente de salida','1 a 2000 mA'],['Tensión de salida','800 Vp-p'],['Transmisor interno','200 W'],['Canales de entrada','1, 2, 4, 6 u 8'],['Rango de medida','±10 Vp-p'],['Impedancia de entrada','>150 MΩ'],['IP','6 ventanas, ON+ OFF ON− OFF'],['Ciclos IP','0.5, 1, 2, 4, 8 s'],['Apilado','hasta 300 ciclos'],['Alcance Wi-Fi','~100 m'],['Memoria interna','>79 000 res. / >26 000 res.+IP']]);
+function ext(){
+ const P=st.pts.slice(0,st.i),th=+$('er').value||2,n=P.length;
+ $('jf').textContent=($('jb').value||'LINEA01')+'.stg';
+ if(vis('live'))$('strip').innerHTML=[...Array(+$('ne').value)].map((_,i)=>`<i class="${st.act[0].includes(i)?'a':st.act[1].includes(i)?'b':''}"></i>`).join('');
+ if(vis('cfg')){const A=seq(),g=Math.ceil(A.length/8),m=$('ip').checked?26000:79000;
+  $('sum').innerHTML=kv([['Puntos de medida',A.length],['Grupos de 8 canales',g],['Duración estimada',(g*iv()/60000).toFixed(1)+' min'],['Longitud del tendido',L().toFixed(0)+' m'],['Profundidad aprox.',(.2*L()).toFixed(0)+' m'],['Memoria interna',(A.length/m*100).toFixed(1)+' %']])}
+ if(vis('con')){const c=st.cr;
+  if(!c){$('cst').innerHTML='<p class="mt">Sin test. Conecta el equipo y pulsa F1 Contacto.</p>';$('cbad').innerHTML=''}
+  else{const s=[...c].sort((a,b)=>a-b),f=(a,b)=>c.filter(v=>v>=a&&v<b).length;
+   $('cst').innerHTML=kv([['Mediana',s[c.length>>1].toFixed(2)+' kΩ'],['Máxima',s[c.length-1].toFixed(1)+' kΩ'],['Menos de 2 kΩ',f(0,2)],['2 a 5 kΩ',f(2,5)],['5 a 10 kΩ',f(5,10)],['Más de 10 kΩ',f(10,1e9)]]);
+   $('cbad').innerHTML=c.map((v,i)=>[i,v]).filter(x=>x[1]>=5).map(([i,v])=>`<div class="kv"><span>E${i+1}</span><b class="${v>=10?'r':'o'}">${v.toFixed(1)} kΩ · ${v>=10?'reclavar o humedecer':'revisar'}</b></div>`).join('')||'<p class="mt">Ninguno.</p>'}}
+ if(vis('qa')){const E=P.map(q=>q.err),bad=P.filter(q=>q.err>th),rh=P.map(q=>q.rho).sort((a,b)=>a-b);
+  $('qk').innerHTML=kv([['Puntos medidos',n],['Sobre el umbral ('+th+' %)',bad.length+(n?' · '+(bad.length/n*100).toFixed(0)+' %':'')],['Error medio',n?(E.reduce((a,b)=>a+b,0)/n).toFixed(2)+' %':'—'],['ρa mediana',n?rh[n>>1].toPrecision(3)+' Ωm':'—']]);
+  $('qt').innerHTML=[...P].sort((a,b)=>b.err-a.err).slice(0,6).map(q=>`<div class="kv"><span>A${q.p[0]+1} B${q.p[1]<0?'∞':q.p[1]+1} M${q.p[2]+1} N${q.p[3]+1}</span><b class="${q.err>th?'o':''}">${q.err.toFixed(1)} % · ${q.rho.toPrecision(3)} Ωm</b></div>`).join('')||'<p class="mt">Aún no hay puntos medidos.</p>';
+  let[x,w,h]=cv('qh');const ed=[0,1,2,3,5,10,60],cn=ed.slice(1).map((e,i)=>E.filter(v=>v>=ed[i]&&v<e).length),mx=Math.max(1,...cn),bw=(w-20)/cn.length;x.font='10px system-ui';
+  cn.forEach((c,i)=>{const bh=c/mx*(h-44);x.fillStyle=ed[i]<th?'#34d399':'#fbbf24';x.fillRect(10+i*bw+4,h-22-bh,bw-8,bh);x.fillStyle='#7f93a9';x.fillText(ed[i]+'–'+ed[i+1],10+i*bw+4,h-8);x.fillText(c,10+i*bw+4,h-26-bh)});
+  [x,w,h]=cv('qz');x.strokeStyle='#2b3b52';x.strokeRect(10,10,w-20,h-30);x.fillStyle='#7f93a9';x.font='10px system-ui';x.fillText('ρa 10 → 1000 Ωm (log)',10,h-4);x.fillText('error',14,22);
+  P.forEach(q=>{x.fillStyle=q.err>th?'#fbbf24':'#38c8f5';x.fillRect(10+(Math.log10(q.rho)-1)/2*(w-20),h-20-Math.min(q.err,20)/20*(h-34),3,3)})}
+ if(vis('dat')){const m=$('ip').checked?26000:79000,f=($('jb').value||'LINEA01');$('dm').style.width=Math.min(100,n/m*100)+'%';$('dmt').textContent=n+' de '+m+' mediciones';
+  $('dfl').innerHTML=kv([[f+'.stg (actual)',n+' puntos'],['LINEA00.stg','1 248 puntos'],['DD56.cmd','archivo de comandos']])}
+ if(vis('eq'))$('eqd').innerHTML=kv([['Batería interna',st.bat.toFixed(2)+' V'],['Batería externa',(st.bat-.2).toFixed(2)+' V'],['Enlace',['Desconectado','Conectando','Conectado'][st.c]],['Señal Wi-Fi',st.c==2?'−58 dBm':'—'],['GPS','3D, 9 sat'],['Firmware',st.c==2?'4.2':'—']])}
+const dl=(f,t)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=f;a.click();log('Exportado '+f)},nm=()=>$('jb').value||'LINEA01';
+$('x1').onclick=()=>{const P=st.pts.slice(0,st.i);if(!P.length)return log('No hay puntos para exportar');
+ dl(nm()+'.csv','A,B,M,N,x_m,z_m,rho_ohm_m,dV_I_ohm,I_mA,V_mV,error_pct\n'+P.map(q=>[q.p[0]+1,q.p[1]<0?'*':q.p[1]+1,q.p[2]+1,q.p[3]+1,q.x,q.z,q.rho,q.R,q.I,q.V,q.err].map(v=>typeof v=='number'?+v.toPrecision(6):v).join(',')).join('\n')+'\n')};
+const ef=x=>{const[m,e]=x.toExponential(14).split('e'),n=+e;return m+'E'+(n<0?'-':'+')+String(Math.abs(n)).padStart(4,'0')},
+z2d=(rows,rem)=>'c1 p1 '+(rem?'*c2':'c2')+' p2 res \r\n'+rows.map(r=>r.map(v=>(typeof v=='number'?(v<0?'-':' ')+ef(Math.abs(v)):' '+v)+' ').join('')+'\r\n').join(''),
+stamp=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())};
+const sg=q=>{const[A,B,M,N]=q.p,d=(u,v)=>Math.abs(u-v);let s=1/d(A,M)-1/d(A,N);if(B>=0)s+=1/d(B,N)-1/d(B,M);return Math.sign(s)};
+$('x2').onclick=()=>{const P=st.pts.slice(0,st.i),s=+$('sp').value||5;if(!P.length)return log('No hay puntos para exportar');
+ dl(nm()+'-'+stamp()+'.z2d',z2d(P.map(q=>[q.p[0]*s,q.p[2]*s,q.p[1]<0?'*':q.p[1]*s,q.p[3]*s,sg(q)*q.R]),P.some(q=>q.p[1]<0)))};
+$('rm').onclick=()=>{const th=+$('er').value||2,B=st.pts.slice(0,st.i).filter(q=>q.err>th);B.forEach(q=>q.err*=.45);log(`Remedición: ${B.length} puntos con más ciclos de apilado`);ext()};
+$('rt').onclick=()=>{$('tres').textContent='Receiver test: 8 canales dentro de tolerancia (simulado).';log('Receiver test OK')};
+$('it').onclick=()=>{$('tres').textContent='IP test load: ventanas M1 a M6 dentro de tolerancia (simulado).';log('IP test load OK')};
+$('spb').onclick=()=>{const v=[...Array(8)].map(()=>gauss()*12);$('tres').innerHTML=v.map((x,i)=>`CH${i+1} ${x.toFixed(1)} mV`).join(' · ');log('SP medido en 8 canales')};
+setC();ext();
+</script>
+</body></html>

@@ -1,0 +1,6 @@
+{
+  "name": "ERT Manager · SuperSting R8/IP",
+  "description": "Backend API y consola móvil para tomografía eléctrica multicanal e IP (SuperSting R8/IP).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
